@@ -52,8 +52,8 @@ public class CuboidCLI {
         cuboidQueue.push(baseCuboid);
         while (!cuboidQueue.isEmpty()) {
             long cuboid = cuboidQueue.pop();
-            Collection<Long> spnanningCuboids = scheduler.getSpanningCuboid(cuboid);
-            for (Long sc : spnanningCuboids) {
+            Collection<Long> spanningCuboids = scheduler.getSpanningCuboid(cuboid);
+            for (Long sc : spanningCuboids) {
                 boolean notfound = cuboidSet.add(sc);
                 if (!notfound) {
                     throw new IllegalStateException("Find duplicate spanning cuboid " + sc + " from cuboid " + cuboid);
