@@ -146,9 +146,9 @@ public class CuboidCLI {
             allLevelCounts[i] = currentQueue.size();
             while (!currentQueue.isEmpty()) {
                 long cuboid = currentQueue.pop();
-                Collection<Long> spnanningCuboids = scheduler.getSpanningCuboid(cuboid);
+                Collection<Long> spanningCuboids = scheduler.getSpanningCuboid(cuboid);
 
-                nextQueue.addAll(spnanningCuboids);
+                nextQueue.addAll(spanningCuboids);
             }
             currentQueue = nextQueue;
             nextQueue = new LinkedList<Long>();
