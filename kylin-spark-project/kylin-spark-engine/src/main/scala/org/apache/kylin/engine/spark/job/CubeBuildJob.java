@@ -66,6 +66,8 @@ import scala.Tuple2;
 import scala.collection.JavaConversions;
 
 import java.io.IOException;
+import java.util.Queue;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -300,7 +302,7 @@ public class CubeBuildJob extends SparkApplication {
     private void build(Collection<NBuildSourceInfo> buildSourceInfos, SegmentInfo seg, SpanningTree st) throws InterruptedException{
 
         List<NBuildSourceInfo> theFirstLevelBuildInfos = buildLayer(buildSourceInfos, seg, st);
-        LinkedList<List<NBuildSourceInfo>> queue = new LinkedList<>();
+        Queue<List<NBuildSourceInfo>> queue = new ArrayDeque<>();
 
         if (!theFirstLevelBuildInfos.isEmpty()) {
             queue.offer(theFirstLevelBuildInfos);

@@ -20,8 +20,9 @@ package org.apache.kylin.cube.cuboid;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Queue;
+import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.TreeSet;
 
 import org.apache.kylin.common.KylinConfig;
@@ -48,12 +49,12 @@ public class CuboidCLI {
         long baseCuboid = Cuboid.getBaseCuboidId(cubeDesc);
         Collection<Long> cuboidSet = new TreeSet<Long>();
         cuboidSet.add(baseCuboid);
-        LinkedList<Long> cuboidQueue = new LinkedList<Long>();
+        ArrayDeque<Long> cuboidQueue = new ArrayDeque<>();
         cuboidQueue.push(baseCuboid);
         while (!cuboidQueue.isEmpty()) {
             long cuboid = cuboidQueue.pop();
-            Collection<Long> spnanningCuboids = scheduler.getSpanningCuboid(cuboid);
-            for (Long sc : spnanningCuboids) {
+            Collection<Long> spanningCuboids = scheduler.getSpanningCuboid(cuboid);
+            for (Long sc : spanningCuboids) {
                 boolean notfound = cuboidSet.add(sc);
                 if (!notfound) {
                     throw new IllegalStateException("Find duplicate spanning cuboid " + sc + " from cuboid " + cuboid);
@@ -137,21 +138,22 @@ public class CuboidCLI {
         int[] allLevelCounts = new int[levels + 1];
 
         CuboidScheduler scheduler = cube.getInitialCuboidScheduler();
-        LinkedList<Long> nextQueue = new LinkedList<Long>();
-        LinkedList<Long> currentQueue = new LinkedList<Long>();
+        Queue<Long> nextQueue = new ArrayDeque<>();
+        Queue<Long> currentQueue = new ArrayDeque<>();
+
         long baseCuboid = Cuboid.getBaseCuboidId(cube);
-        currentQueue.push(baseCuboid);
+        currentQueue.add(baseCuboid);
 
         for (int i = 0; i <= levels; i++) {
             allLevelCounts[i] = currentQueue.size();
             while (!currentQueue.isEmpty()) {
-                long cuboid = currentQueue.pop();
+                long cuboid = currentQueue.poll();
                 Collection<Long> spnanningCuboids = scheduler.getSpanningCuboid(cuboid);
 
                 nextQueue.addAll(spnanningCuboids);
             }
             currentQueue = nextQueue;
-            nextQueue = new LinkedList<Long>();
+            nextQueue = new ArrayDeque<>();
 
             if (i == levels) {
                 if (!currentQueue.isEmpty()) {

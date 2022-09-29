@@ -19,14 +19,14 @@
 package org.apache.kylin.cube.cuboid;
 
 import java.io.PrintWriter;
+import java.util.Queue;
+import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.kylin.cube.CubeInstance;
 import org.apache.kylin.cube.model.AggregationGroup;
 import org.apache.kylin.cube.model.CubeDesc;
@@ -176,14 +176,12 @@ public class TreeCuboidScheduler extends CuboidScheduler {
         }
 
         private void buildIndex() {
-            LinkedList<TreeNode> queue = new LinkedList<>();
+            Queue<TreeNode> queue = new ArrayDeque<>();
             queue.add(root);
             while (!queue.isEmpty()) {
-                TreeNode node = queue.removeFirst();
+                TreeNode node = queue.poll();
                 index.put(node.cuboidId, node);
-                for (TreeNode child : node.children) {
-                    queue.add(child);
-                }
+                queue.addAll(node.children);
             }
         }
 

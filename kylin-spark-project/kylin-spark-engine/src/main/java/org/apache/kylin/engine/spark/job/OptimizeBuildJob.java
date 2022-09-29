@@ -62,10 +62,11 @@ import scala.Tuple2;
 import scala.collection.JavaConversions;
 
 import java.io.IOException;
+import java.util.Queue;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -216,8 +217,7 @@ public class OptimizeBuildJob extends SparkApplication {
     private void build(Collection<NBuildSourceInfo> buildSourceInfos, SegmentInfo seg, SpanningTree st) {
 
         List<NBuildSourceInfo> theFirstLevelBuildInfos = buildLayer(buildSourceInfos, seg, st);
-        LinkedList<List<NBuildSourceInfo>> queue = new LinkedList<>();
-
+        Queue<List<NBuildSourceInfo>> queue = new ArrayDeque<>();
         if (!theFirstLevelBuildInfos.isEmpty()) {
             queue.offer(theFirstLevelBuildInfos);
         }
